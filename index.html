@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0B0F14" />
+
+    <title>In Parallel — history, happening together</title>
+    <meta
+      name="description"
+      content="A comparative world-history explorer. 647 curated events across 14 regions, 10,000 BCE to 1999 CE, on one shared timeline, with a Wikipedia article for every milestone."
+    />
+    <meta name="author" content="Chris Quinn" />
+    <link rel="canonical" href="https://history.chrisquinn.ie/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="In Parallel" />
+    <meta property="og:title" content="In Parallel — history, happening together" />
+    <meta
+      property="og:description"
+      content="The same moment, different places. 12,000 years of world history on one shared timeline."
+    />
+    <meta property="og:url" content="https://history.chrisquinn.ie/" />
+    <meta property="og:locale" content="en_IE" />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <main
+        style="
+          font-family: ui-sans-serif, system-ui, sans-serif;
+          padding: 2rem;
+          color: #f2f4f7;
+          background: #0b0f14;
+          min-height: 100vh;
+        "
+      >
+        <h1>In Parallel</h1>
+        <p>A comparative world-history explorer. It needs JavaScript to draw the timeline.</p>
+        <p>
+          The data is a plain CSV:
+          <a href="/data/history-events.csv" style="color: #a3e635">history-events.csv</a>.
+        </p>
+      </main>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

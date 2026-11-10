@@ -51,7 +51,8 @@ export interface HistoryView {
 export interface HistoryActions {
   setEra: (id: EraId) => void
   resetEra: () => void
-  selectEvent: (id: string | null) => void
+  /** `clearQuery` empties the search in the same transition (picking a search result). */
+  selectEvent: (id: string | null, options?: { clearQuery?: boolean }) => void
   jumpToYear: (year: number) => void
   setFocus: (axisYear: number) => void
   setRange: (range: AxisRange) => void
@@ -150,14 +151,15 @@ export function useHistoryState(events: readonly HistoricalEvent[]): [HistoryVie
       )
     }
 
-    const selectEvent = (id: string | null) => {
+    const selectEvent = (id: string | null, options: { clearQuery?: boolean } = {}) => {
+      const base = options.clearQuery ? { ...state, query: '' } : state
       if (id === null) {
-        commit({ ...state, selectedEventId: null })
+        commit({ ...base, selectedEventId: null })
         return
       }
       const event = eventsById.get(id)
       if (!event) return
-      let next: HistoryState = { ...state, selectedEventId: id, focus: event.axisYear }
+      let next: HistoryState = { ...base, selectedEventId: id, focus: event.axisYear }
       if (!rangeContains(state.range, event.axisYear)) {
         const era = eraForAxisYear(event.axisYear)
         next = { ...next, era: era.id, range: { start: era.axisStart, end: era.axisEnd } }

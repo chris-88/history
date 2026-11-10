@@ -18,13 +18,17 @@ export function fromAxisYear(axisYear: number): number {
 
 const formatter = new Intl.NumberFormat('en-IE')
 
-/** `-500 -> "500 BCE"`, `1066 -> "1066 CE"`. Years under 10,000 are not grouped with commas unless `grouped`. */
+/**
+ * `-500 -> "500 BCE"`, `-9600 -> "9,600 BCE"`, `1066 -> "1066 CE"`. Follows the CSV's
+ * authored style: BCE magnitudes are grouped with commas, CE years are not. `grouped`
+ * overrides either way.
+ */
 export function formatYear(
   year: number,
   options: { era?: boolean; grouped?: boolean } = {},
 ): string {
   if (year === 0) throw new RangeError('Year 0 does not exist in the historical calendar')
-  const { era = true, grouped = true } = options
+  const { era = true, grouped = year < 0 } = options
   const magnitude = Math.abs(year)
   const digits = grouped ? formatter.format(magnitude) : String(magnitude)
   if (year < 0) return `${digits} BCE`
@@ -66,5 +70,22 @@ export function axisTicks(start: number, end: number, targetTicks = 10): number[
   const step = niceStep(end - start, targetTicks)
   const ticks: number[] = []
   for (let t = Math.ceil(start / step) * step; t <= end; t += step) ticks.push(t)
+  return ticks
+}
+
+/**
+ * Axis tick positions at round CALENDAR years (500 BCE, 400 BCE … 100 CE), so labels read
+ * naturally on both sides of the boundary. `axisTicks` rounds axis coordinates instead, which
+ * puts BCE ticks on years like 401 BCE. Year 0 is skipped; it does not exist.
+ */
+export function calendarTicks(start: number, end: number, targetTicks = 10): number[] {
+  const step = niceStep(end - start, targetTicks)
+  const ticks: number[] = []
+  for (let year = Math.ceil(fromAxisYear(start) / step) * step; ; year += step) {
+    if (year === 0) continue
+    const axis = toAxisYear(year)
+    if (axis > end) break
+    if (axis >= start) ticks.push(axis)
+  }
   return ticks
 }

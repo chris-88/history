@@ -114,4 +114,16 @@ describe('useHistoryState', () => {
     expect(result.current[0].matchingCount).toBe(3)
     expect(result.current[0].visible).toHaveLength(2)
   })
+
+  it('picks a search result and clears the query in one transition', () => {
+    const { result } = setup('q=hastings')
+    expect(result.current[0].visible).toHaveLength(0)
+    act(() => result.current[1].selectEvent('hastings', { clearQuery: true }))
+    expect(result.current[0].state).toMatchObject({
+      era: 'medieval',
+      query: '',
+      selectedEventId: 'hastings',
+    })
+    expect(result.current[0].selectedHidden).toBe(false)
+  })
 })

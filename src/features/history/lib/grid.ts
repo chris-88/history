@@ -16,7 +16,7 @@ export interface GridBucket extends AxisRange {
   /** CSV years of the period. */
   startYear: number
   endYear: number
-  /** `1,916 CE` for single years, `50 – 1 BCE`, `1 – 49 CE`, `3,200 – 3,001 BCE` for periods. */
+  /** `1916 CE` for single years, `50 – 1 BCE`, `1 – 49 CE`, `3,200 – 3,001 BCE` for periods. */
   label: string
   isFocus: boolean
 }

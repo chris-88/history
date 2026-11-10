@@ -26,8 +26,8 @@ describe('gridBuckets', () => {
   it('centres nine single years on the focus', () => {
     const buckets = gridBuckets(1916, 1)
     expect(buckets).toHaveLength(9)
-    expect(buckets[0]!.label).toBe('1,912 CE')
-    expect(buckets[4]).toMatchObject({ label: '1,916 CE', isFocus: true })
+    expect(buckets[0]!.label).toBe('1912 CE')
+    expect(buckets[4]).toMatchObject({ label: '1916 CE', isFocus: true })
     expect(buckets.filter((b) => b.isFocus)).toHaveLength(1)
   })
 
@@ -59,7 +59,7 @@ describe('gridBuckets', () => {
     expect(gridBuckets(1066, 20)[4]).toMatchObject({
       startYear: 1060,
       endYear: 1079,
-      label: '1,060 – 1,079 CE',
+      label: '1060 – 1079 CE',
       isFocus: true,
     })
     expect(gridBuckets(toAxisYear(-1600), 200)[4]).toMatchObject({

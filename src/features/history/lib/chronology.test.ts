@@ -1,5 +1,6 @@
 import {
   axisTicks,
+  calendarTicks,
   formatAxisYear,
   formatEventDate,
   formatYear,
@@ -39,13 +40,15 @@ describe('toAxisYear / fromAxisYear', () => {
 describe('formatYear', () => {
   it('labels BCE and CE', () => {
     expect(formatYear(-500)).toBe('500 BCE')
-    expect(formatYear(1066)).toBe('1,066 CE')
-    expect(formatYear(1066, { grouped: false })).toBe('1066 CE')
+    expect(formatYear(1066)).toBe('1066 CE')
+    expect(formatYear(1066, { grouped: true })).toBe('1,066 CE')
     expect(formatYear(-10000)).toBe('10,000 BCE')
+    expect(formatYear(-9600)).toBe('9,600 BCE')
+    expect(formatYear(-9600, { grouped: false })).toBe('9600 BCE')
   })
 
   it('can drop the CE suffix but never the BCE one', () => {
-    expect(formatYear(1916, { era: false })).toBe('1,916')
+    expect(formatYear(1916, { era: false })).toBe('1916')
     expect(formatYear(-44, { era: false })).toBe('44 BCE')
   })
 
@@ -102,5 +105,27 @@ describe('ticks', () => {
     expect(labels).toContain('1 BCE')
     expect(labels).not.toContain('0 CE')
     expect(labels).not.toContain('0 BCE')
+  })
+})
+
+describe('calendarTicks', () => {
+  it('ticks round calendar years on both sides of the boundary, never year 0', () => {
+    const labels = calendarTicks(toAxisYear(-500), toAxisYear(499)).map((t) => formatAxisYear(t))
+    expect(labels).toContain('500 BCE')
+    expect(labels).toContain('100 BCE')
+    expect(labels).toContain('100 CE')
+    expect(labels).not.toContain('401 BCE')
+    expect(labels.join(' ')).not.toMatch(/\b0 (BCE|CE)/)
+  })
+
+  it('keeps 1 BCE and 1 CE adjacent at a one-year step', () => {
+    const labels = calendarTicks(toAxisYear(-3), toAxisYear(3)).map((t) => formatAxisYear(t))
+    expect(labels).toEqual(['3 BCE', '2 BCE', '1 BCE', '1 CE', '2 CE', '3 CE'])
+  })
+
+  it('stays inside the window at the dataset ends', () => {
+    const ticks = calendarTicks(toAxisYear(-10000), toAxisYear(1999))
+    expect(ticks[0]).toBeGreaterThanOrEqual(toAxisYear(-10000))
+    expect(ticks.at(-1)).toBeLessThanOrEqual(1999)
   })
 })
